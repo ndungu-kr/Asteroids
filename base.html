@@ -11,7 +11,8 @@
     <canvas id="gameCanvas" width="700" height="500"></canvas>
     <script>
         const FPS = 30; // frames per second
-        const SHIP_SIZE = 30; // ship height in pixels 
+        const SHIP_SIZE = 30; // ship height in pixels
+        const TURN_SPEED = 360; // turn speed in degrees per second
 
         /** @type {HTMLCanvasElement} */
         var canv = document.getElementById("gameCanvas");
@@ -21,11 +22,50 @@
             x: canv.width / 2,
             y: canv.height / 2,
             r: SHIP_SIZE / 2,
-            a: 90 / 180 * Math.PI // converting 90 degrees to radians 
+            a: 90 / 180 * Math.PI, // converting 90 degrees to radians
+            rot: 0
         }
+
+        // set up event handlers
+        document.addEventListener("keydown", keyDown);
+        document.addEventListener("keyup", keyUp);
 
         // set up game loop
         setInterval(update, 1000 / FPS);
+
+        function keyDown(/** @type {KeyboardEvent} */ ev) {
+            switch (ev.keyCode) {
+                // left arrow (rotate ship left)
+                case 37:
+                    ship.rot = TURN_SPEED / 180 * Math.PI / FPS;
+                    break;
+                // up arrow (thrust ship foward)
+                case 38:
+
+                    break;
+                // right arrow (rotate ship right)
+                case 39:
+                    ship.rot = -TURN_SPEED / 180 * Math.PI / FPS;
+                    break;
+            }
+        }
+
+        function keyUp(/** @type {KeyboardEvent} */ ev) {
+            switch (ev.keyCode) {
+                // release left arrow (stop rotating left)
+                case 37:
+                    ship.rot = 0;
+                    break;
+                // release up arrow (stop thrust)
+                case 38:
+
+                    break;
+                // release right arrow (stop rotating right)
+                case 39:
+                    ship.rot = 0;
+                    break;
+            }
+        }
 
         function update() {
 
@@ -56,6 +96,7 @@
             ctx.stroke();
 
             // rotate ship
+            ship.a += ship.rot;
 
             // move ship
 
