@@ -11,10 +11,18 @@
     <canvas id="gameCanvas" width="700" height="500"></canvas>
     <script>
         const FPS = 30; // frames per second
+        const SHIP_SIZE = 30; // ship height in pixels 
 
         /** @type {HTMLCanvasElement} */
         var canv = document.getElementById("gameCanvas");
         var ctx = canv.getContext("2d");
+
+        var ship = {
+            x: canv.width / 2,
+            y: canv.height / 2,
+            r: SHIP_SIZE / 2,
+            a: 90 / 180 * Math.PI // converting 90 degrees to radians 
+        }
 
         // set up game loop
         setInterval(update, 1000 / FPS);
@@ -22,13 +30,38 @@
         function update() {
 
             // draw space
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canv.width, canv.height);
 
             // draw ship
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = SHIP_SIZE / 20;
+            ctx.beginPath();
+            // nose of ship
+            ctx.moveTo(
+                ship.x + 4 / 3 * ship.r * Math.cos(ship.a),
+                ship.y - 4 / 3 * ship.r * Math.sin(ship.a)
+            );
+            // rear left of ship
+            ctx.lineTo(
+                ship.x - ship.r * (2 / 3 * Math.cos(ship.a) + Math.sin(ship.a)),
+                ship.y + ship.r * (2 / 3 * Math.sin(ship.a) - Math.cos(ship.a))
+            );
+            // rear right of ship
+            ctx.lineTo(
+                ship.x - ship.r * (2 / 3 * Math.cos(ship.a) - Math.sin(ship.a)),
+                ship.y + ship.r * (2 / 3 * Math.sin(ship.a) + Math.cos(ship.a))
+            );
+            ctx.closePath();
+            ctx.stroke();
 
             // rotate ship
 
             // move ship
 
+            // centre dot
+            ctx.fillStyle = "red";
+            ctx.fillRect(ship.x - 1, ship.y - 1, 2, 2);
 
         }
     </script>
