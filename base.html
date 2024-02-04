@@ -118,6 +118,18 @@
             ship.x += ship.thrust.x;
             ship.y += ship.thrust.y;
 
+            // handling edge of screen
+            if (ship.x < 0 - ship.r) {
+                ship.x = canv.width + ship.r;
+            } else if (ship.x > canv.width + ship.r) {
+                ship.x = 0 - ship.r;
+            }
+            if (ship.y < 0 - ship.r) {
+                ship.y = canv.height + ship.r;
+            } else if (ship.y > canv.height + ship.r) {
+                ship.y = 0 - ship.r;
+            }
+
             // centre dot
             ctx.fillStyle = "red";
             ctx.fillRect(ship.x - 1, ship.y - 1, 2, 2);
