@@ -11,7 +11,9 @@
     <canvas id="gameCanvas" width="700" height="500"></canvas>
     <script>
         const FPS = 30; // frames per second
+        const FRICTION = 0.7; // friction coefficient where 0 is min  and 1 is max friction
         const SHIP_SIZE = 30; // ship height in pixels
+        const SHIP_THRUST = 5; // acceleration of the ship in pixels per second per second
         const TURN_SPEED = 360; // turn speed in degrees per second
 
         /** @type {HTMLCanvasElement} */
@@ -23,7 +25,12 @@
             y: canv.height / 2,
             r: SHIP_SIZE / 2,
             a: 90 / 180 * Math.PI, // converting 90 degrees to radians
-            rot: 0
+            rot: 0,
+            thrusting: false,
+            thrust: {
+                x: 0,
+                y: 0
+            }
         }
 
         // set up event handlers
@@ -41,7 +48,7 @@
                     break;
                 // up arrow (thrust ship foward)
                 case 38:
-
+                    ship.thrusting = true;
                     break;
                 // right arrow (rotate ship right)
                 case 39:
@@ -58,7 +65,7 @@
                     break;
                 // release up arrow (stop thrust)
                 case 38:
-
+                    ship.thrusting = false;
                     break;
                 // release right arrow (stop rotating right)
                 case 39:
@@ -72,6 +79,15 @@
             // draw space
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canv.width, canv.height);
+
+            // thrust ship
+            if (ship.thrusting) {
+                ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
+                ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) / FPS;
+            } else {
+                ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
+                ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
+            }
 
             // draw ship
             ctx.strokeStyle = "white";
@@ -99,6 +115,8 @@
             ship.a += ship.rot;
 
             // move ship
+            ship.x += ship.thrust.x;
+            ship.y += ship.thrust.y;
 
             // centre dot
             ctx.fillStyle = "red";
