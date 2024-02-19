@@ -53,10 +53,16 @@
             roids = [];
             var x, y;
             for (var i = 0; i < ROIDS_NUM; i++) {
-                x = Math.floor(Math.random() * canv.width);
-                y = Math.floor(Math.random() * canv.height);
+                do {
+                    x = Math.floor(Math.random() * canv.width);
+                    y = Math.floor(Math.random() * canv.height);
+                } while (distBetweenPoints(ship.x, ship.y, x, y) < ROIDS_SIZE * 2 + ship.r);
                 roids.push(newAsteroid(x, y));
             }
+        }
+
+        function distBetweenPoints(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
         }
 
         function keyDown(/** @type {KeyboardEvent} */ ev) {
