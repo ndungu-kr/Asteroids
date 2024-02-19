@@ -20,6 +20,8 @@
         const SHIP_SIZE = 30; // ship height in pixels
         const SHIP_THRUST = 5; // acceleration of the ship in pixels per second per second
         const TURN_SPEED = 360; // turn speed in degrees per second
+        const SHOW_CENTRE_DOT = false; // show or hide the ship's centre dot
+        const SHOW_BOUNDING = true; // show or hide collision bounding 
 
         /** @type {HTMLCanvasElement} */
         var canv = document.getElementById("gameCanvas");
@@ -182,11 +184,19 @@
             ctx.closePath();
             ctx.stroke();
 
+            // draw bounding 
+            if (SHOW_BOUNDING) {
+                ctx.strokeStyle = "lime";
+                ctx.beginPath();
+                ctx.arc(ship.x, ship.y, ship.r, 0, Math.PI * 2, false);
+                ctx.stroke();
+            }
+
             // draw the asteroids
-            ctx.strokeStyle = "slategrey";
-            ctx.lineWidth = SHIP_SIZE / 20;
             var x, y, r, a, vert, offs;
             for (var i = 0; i < roids.length; i++) {
+                ctx.strokeStyle = "slategrey";
+                ctx.lineWidth = SHIP_SIZE / 20;
 
                 // get the asteroid properties
                 x = roids[i].x;
@@ -212,6 +222,14 @@
                 }
                 ctx.closePath();
                 ctx.stroke();
+
+                // draw bounding 
+                if (SHOW_BOUNDING) {
+                    ctx.strokeStyle = "lime";
+                    ctx.beginPath();
+                    ctx.arc(x, y, r, 0, Math.PI * 2, false);
+                    ctx.stroke();
+                }
 
                 // move the asteroid
                 roids[i].x += roids[i].xv;
@@ -251,8 +269,10 @@
             }
 
             // centre dot
-            ctx.fillStyle = "red";
-            ctx.fillRect(ship.x - 1, ship.y - 1, 2, 2);
+            if (SHOW_CENTRE_DOT) {
+                ctx.fillStyle = "red";
+                ctx.fillRect(ship.x - 1, ship.y - 1, 2, 2);
+            }
 
         }
     </script>
