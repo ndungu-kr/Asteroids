@@ -66,33 +66,40 @@
 
         function keyDown(/** @type {KeyboardEvent} */ ev) {
             switch (ev.keyCode) {
-                // left arrow (rotate ship left)
-                case 37:
+                // rotate ship left
+                case 37: // left arrow key
+                case 65: // A key
                     ship.rot = TURN_SPEED / 180 * Math.PI / FPS;
                     break;
-                // up arrow (thrust ship foward)
-                case 38:
+                // thrust ship foward
+                case 38: // up arrow key
+                case 87: // W key
                     ship.thrusting = true;
                     break;
-                // right arrow (rotate ship right)
-                case 39:
+                // rotate ship right
+                case 39: // right arrow key
+                case 68: // D key
                     ship.rot = -TURN_SPEED / 180 * Math.PI / FPS;
                     break;
             }
         }
 
+        // releasing key stops action 
         function keyUp(/** @type {KeyboardEvent} */ ev) {
             switch (ev.keyCode) {
-                // release left arrow (stop rotating left)
-                case 37:
+                // stop rotating left
+                case 37: // left arrow key
+                case 65: // A key
                     ship.rot = 0;
                     break;
-                // release up arrow (stop thrust)
-                case 38:
+                // stop thrust
+                case 38: // up arrow key
+                case 87: // W key
                     ship.thrusting = false;
                     break;
-                // release right arrow (stop rotating right)
-                case 39:
+                // stop rotating right
+                case 39: // right arrow key
+                case 68: // D key
                     ship.rot = 0;
                     break;
             }
