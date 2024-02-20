@@ -12,6 +12,8 @@
     <script>
         const FPS = 30; // frames per second
         const FRICTION = 0.7; // friction coefficient where 0 is min  and 1 is max friction
+        const LASER_MAX = 10 // maximum number of lasers on screen at once
+        const LASER_SPD = 500 // speed of lasers in pixels per second
         const ROIDS_JAG = 0.4; // jaggedness of the asteroids (0 is none and 1 is lots)
         const ROIDS_NUM = 3; // starting number of asteroids
         const ROIDS_SIZE = 100; // starting size of asteroids in pixels
@@ -81,6 +83,10 @@
                 case 68: // D key
                     ship.rot = -TURN_SPEED / 180 * Math.PI / FPS;
                     break;
+                // shoot laser
+                case 32: // spacebar
+                    shootLaser();
+                    break;
             }
         }
 
@@ -101,6 +107,10 @@
                 case 39: // right arrow key
                 case 68: // D key
                     ship.rot = 0;
+                    break;
+                // allow shooting again
+                case 32: // spacebar
+                    ship.canShoot = true;
                     break;
             }
         }
@@ -133,6 +143,8 @@
                 a: 90 / 180 * Math.PI, // converting 90 degrees to radians
                 blinkTime: Math.ceil(SHIP_BLINK_DUR * FPS),
                 blinkNum: Math.ceil(SHIP_INV_DUR / SHIP_BLINK_DUR),
+                canShoot: true,
+                lasers: [],
                 explodeTime: 0,
                 rot: 0,
                 thrusting: false,
@@ -141,6 +153,21 @@
                     y: 0
                 }
             }
+        }
+
+        function shootLaser() {
+            // create laser object
+            if (ship.canShoot && ship.lasers.length < LASER_MAX) {
+                ship.lasers.push({ // from nose of ship
+                    x: ship.x + 4 / 3 * ship.r * Math.cos(ship.a),
+                    y: ship.y - 4 / 3 * ship.r * Math.sin(ship.a),
+                    xv: LASER_SPD * Math.cos(ship.a) / FPS,
+                    yv: -LASER_SPD * Math.sin(ship.a) / FPS
+                });
+            }
+
+            // prevent shooting
+            ship.canShoot = false;
         }
 
         function update() {
@@ -302,6 +329,14 @@
                 ctx.fillRect(ship.x - 1, ship.y - 1, 2, 2);
             }
 
+            // draw the lasers
+            for (var i = 0; i < ship.lasers.length; i++) {
+                ctx.fillStyle = "salmon";
+                ctx.beginPath();
+                ctx.arc(ship.lasers[i].x, ship.lasers[i].y, SHIP_SIZE / 15, 0, Math.PI * 2, false);
+                ctx.fill();
+            }
+
             // check for asteroid collisions
             if (!exploding) {
                 if (ship.blinkNum == 0) {
@@ -336,6 +371,12 @@
                 ship.y = canv.height + ship.r;
             } else if (ship.y > canv.height + ship.r) {
                 ship.y = 0 - ship.r;
+            }
+
+            // move the lasers
+            for (var i = 0; i < ship.lasers.length; i++) {
+                ship.lasers[i].x += ship.lasers[i].xv;
+                ship.lasers[i].y += ship.lasers[i].yv;
             }
 
             // move the asteroids
