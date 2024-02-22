@@ -5,6 +5,7 @@ This is a simple remake of the classic 1979 Atari game Asteroids created using J
 Classic Asteroids gameplay mechanics.
 HTML5 Canvas rendering.
 Keyboard controls for intuitive gameplay.
+Sound effects and music included.
 
 # Instructions:
 ## Controls:
